@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>收藏网址与软件下载合集</title>
+    <style>
+        /* 基础样式重置（合并通用重置） */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        /* 整个页面背景改为淡蓝色 */
+        body {
+            background-color: #e6f7ff; /* 淡蓝色背景 */
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1400px; /* 加宽最大宽度，展示更多内容 */
+            margin: 0 auto;
+        }
+
+        /* ========== 收藏网址列表样式 ========== */
+        /* 页面容器 - 优化内边距，减少空白 */
+        .url-container {
+            max-width: 1400px; /* 加宽最大宽度 */
+            margin: 0 auto 15px auto; /* 进一步减少底部间距 */
+            background-color: white;
+            padding: 10px 15px; /* 进一步减少内边距 */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 移除标题样式（已删除标题） */
+        .url-container h1 {
+            display: none;
+        }
+
+        /* 网址按钮网格布局 - 优化列宽和间距，展示更多 */
+        .url-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* 进一步减小最小宽度 */
+            gap: 6px; /* 进一步减小间距 */
+        }
+
+        /* 网址按钮样式 - 改为绿色主题，优化内边距 */
+        .url-btn {
+            padding: 8px 10px; /* 进一步减小内边距 */
+            background-color: #f0fdf4; /* 浅绿底色 */
+            color: #15803d; /* 深绿文字 */
+            border: 1px solid #dcfce7; /* 浅绿边框 */
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px; /* 减小字体 */
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+        }
+
+        .url-btn:hover {
+            background-color: #dcfce7; /* hover加深浅绿 */
+            border-color: #28a745; /* hover边框改为标准绿 */
+            color: #15803d; /* hover文字保持深绿 */
+            transform: scale(1.02);
+            box-shadow: 0 2px 6px rgba(40, 167, 69, 0.2); /* hover阴影改为绿色系 */
+        }
+
+        /* 统计信息样式 - 隐藏统计文字 */
+        .stats {
+            display: none;
+        }
+
+        /* ========== 软件下载页面样式 ========== */
+        .download-container {
+            max-width: 1400px; /* 加宽最大宽度 */
+            margin: 0 auto;
+            background-color: white;
+            padding: 10px 15px; /* 进一步减少内边距 */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 移除软件下载标题和说明 */
+        .download-header {
+            display: none;
+        }
+
+        .link-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 进一步减小最小宽度 */
+            gap: 0.6rem; /* 进一步减小间距 */
+        }
+
+        .link-item {
+            background: white;
+            padding: 0.6rem; /* 进一步减少内边距 */
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .link-item:hover {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 0.8rem; /* 进一步减少内边距 */
+            background-color: #007bff;
+            color: white !important;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            font-size: 0.9rem; /* 减小字体 */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
+
+        .path {
+            color: #dc3545;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .desc {
+            color: #6c757d;
+            font-size: 0.8rem; /* 减小字体 */
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .download-footer {
+            text-align: center;
+            margin-top: 1.5rem; /* 减少顶部间距 */
+            color: #6c757d;
+            padding-top: 0.6rem; /* 减少顶部内边距 */
+            border-top: 1px solid #dee2e6;
+            font-size: 0.85rem; /* 减小字体 */
+        }
+
+        /* ========== 全局通用样式 ========== */
+        /* 返回顶部按钮 */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 9998;
+        }
+
+        #backToTop:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        /* 提示框样式 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .link-item {
+                padding: 0.5rem;
+            }
+            
+            .link-list {
+                grid-template-columns: 1fr;
+            }
+
+            .url-container, .download-container {
+                padding: 10px 8px;
+            }
+
+            .url-btn-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== 第一部分：收藏的网址 ========== -->
+    <div class="url-container">
+        <!-- 移除标题 -->
+        <!-- 移除统计信息 -->
+
+        <!-- 网址按钮网格 -->
+        <div class="url-btn-grid" id="urlBtnGrid">
+            <!-- 网址按钮会通过JS动态生成 -->
+        </div>
+    </div>
+
+    <!-- ========== 第二部分：软件下载列表 ========== -->
+    <div class="download-container">
+        <div class="download-header">
+            <h1>软件下载</h1>
+            <p>点击按钮可跳转至对应下载页面
+                FFmpeg本地安装路径 %APPDATA%\ffmpeg\bin
+            </p>
+        </div>
+
+        <ul class="link-list">
+            <!-- 第2项 -->
+            <li class="link-item">
+                <a href="https://ffmpeg.org/download.html#build-windows" target="_blank" class="download-btn">FFmpeg (Windows版本)</a>
+                <span class="desc">FFmpeg官方下载</span>
+            </li>
+            <!-- 第3项 -->
+            <li class="link-item">
+                <a href="https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0" target="_blank" class="download-btn">.NET 10.0</a>
+                <span class="desc">.NET 10.0 下载（中文站）</span>
+            </li>
+            <!-- 第4项 -->
+            <li class="link-item">
+                <a href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0" target="_blank" class="download-btn">.NET 8.0</a>
+                <span class="desc">.NET 8.0 下载（英文站）</span>
+            </li>
+            <!-- 第5项 -->
+            <li class="link-item">
+                <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0" target="_blank" class="download-btn">.NET 6.0</a>
+                <span class="desc">.NET 6.0 下载（英文站）</span>
+            </li>
+            <!-- 第6项 -->
+            <li class="link-item">
+                <a href="https://learn.microsoft.com/zh-cn/cpp/windows/latest-supported-vc-redist?view=msvc-170" target="_blank" class="download-btn">Microsoft VC Redist</a>
+                <span class="desc">Microsoft VC Redist 运行时库</span>
+            </li>
+            <!-- 第7项 -->
+            <li class="link-item">
+                <a href="https://www.python.org/downloads/" target="_blank" class="download-btn">Python</a>
+                <span class="desc">Python官方下载</span>
+            </li>
+            <!-- 第8项 -->
+            <li class="link-item">
+                <a href="https://www.aida64.com/" target="_blank" class="download-btn">AIDA64</a>
+                <span class="desc">AIDA64 硬件检测工具</span>
+            </li>
+            <!-- 第9项 -->
+            <li class="link-item">
+                <a href="https://www.cpuid.com/softwares/cpu-z.html" target="_blank" class="download-btn">CPU-Z</a>
+                <span class="desc">CPU-Z 硬件信息查看工具</span>
+            </li>
+            <!-- 第10项 -->
+            <li class="link-item">
+                <a href="https://crystalmark.info/en/download/" target="_blank" class="download-btn">CrystalDiskMark</a>
+                <span class="desc">CrystalDiskMark 硬盘测试工具</span>
+            </li>
+            <!-- 第11项 -->
+            <li class="link-item">
+                <a href="https://www.diskgenius.cn/download.php" target="_blank" class="download-btn">DiskGenius</a>
+                <span class="desc">DiskGenius 分区管理工具</span>
+            </li>
+            <!-- 第12项 -->
+            <li class="link-item">
+                <a href="https://www.nirsoft.net/utils/iconsext.html" target="_blank" class="download-btn">IconsExtract</a>
+                <span class="desc">IconsExtract 图标提取工具</span>
+            </li>
+            <!-- 第13项 -->
+            <li class="link-item">
+                <a href="https://www.internetdownloadmanager.com/download.html" target="_blank" class="download-btn">IDM 下载管理器</a>
+                <span class="desc">IDM 下载管理器</span>
+            </li>
+            <!-- 第14项 -->
+            <li class="link-item">
+                <a href="https://github.com/taojy123/KeymouseGo/releases" target="_blank" class="download-btn">KeymouseGo</a>
+                <span class="desc">KeymouseGo 键鼠录制工具</span>
+            </li>
+            <!-- 第15项 -->
+            <li class="link-item">
+                <a href="https://github.com/massgravel/Microsoft-Activation-Scripts" target="_blank" class="download-btn">Microsoft Activation Scripts</a>
+                <span class="desc">Microsoft Activation Scripts 激活脚本</span>
+            </li>
+            <!-- 第16项 -->
+            <li class="link-item">
+                <a href="https://www.microsoft.com/zh-cn/edge/download?form=MA13FJ" target="_blank" class="download-btn">Microsoft Edge</a>
+                <span class="desc">Microsoft Edge 浏览器下载</span>
+            </li>
+            <!-- 第17项 -->
+            <li class="link-item">
+                <a href="https://github.com/Open-Shell/Open-Shell-Menu/releases" target="_blank" class="download-btn">Open-Shell</a>
+                <span class="desc">Open-Shell 开始菜单工具</span>
+            </li>
+            <!-- 第18项 -->
+            <li class="link-item">
+                <a href="https://www.aurelitec.com/thumbico/download/" target="_blank" class="download-btn">Thumbico</a>
+                <span class="desc">Thumbico 图标工具</span>
+            </li>
+            <!-- 第19项 -->
+            <li class="link-item">
+                <a href="https://www.todesk.com/download.html" target="_blank" class="download-btn">ToDesk</a>
+                <span class="desc">ToDesk 远程控制工具</span>
+            </li>
+            <!-- 第20项 -->
+            <li class="link-item">
+                <a href="https://www.ventoy.net/cn/index.html" target="_blank" class="download-btn">Ventoy</a>
+                <span class="desc">Ventoy U盘启动工具</span>
+            </li>
+            <!-- 第21项 -->
+            <li class="link-item">
+                <a href="https://www.puresys.net/637.html" target="_blank" class="download-btn">VMware Workstation PRO</a>
+                <span class="desc">VMware Workstation PRO 下载</span>
+            </li>
+            <!-- 第22项 -->
+            <li class="link-item">
+                <a href="https://dm.weishi.360.cn/home.html" target="_blank" class="download-btn">360 驱动大师</a>
+                <span class="desc">360 驱动大师</span>
+            </li>
+            <!-- 第23项 -->
+            <li class="link-item">
+                <a href="https://www.nvidia.cn/geforce/drivers/" target="_blank" class="download-btn">NVIDIA 显卡驱动</a>
+                <span class="desc">NVIDIA 显卡驱动下载</span>
+            </li>
+            <!-- 第24项 -->
+            <li class="link-item">
+                <a href="https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local" target="_blank" class="download-btn">NVIDIA CUDA 工具包</a>
+                <span class="desc">NVIDIA CUDA 工具包下载</span>
+            </li>
+            <!-- 第25项 -->
+            <li class="link-item">
+                <a href="https://www.realtek.com/Download/List?cate_id=584" target="_blank" class="download-btn">RTL8125/8125B(G) 网卡驱动</a>
+                <span class="desc">RTL8125 / RTL8125B(G) 网卡驱动相关</span>
+            </li>
+            <!-- 第26项 -->
+            <li class="link-item">
+                <a href="https://www.station-drivers.com/index.php/en-us/component/remository/Drivers/Realtek/Card-Reader/Realtek-USB-2.0-3.0/orderby,2/page,2/lang,en-us/?Itemid=0" target="_blank" class="download-btn">Realtek 读卡器驱动</a>
+                <span class="desc">Realtek 读卡器驱动</span>
+            </li>
+            <!-- 第27项 -->
+            <li class="link-item">
+                <a href="https://www.intel.cn/content/www/cn/zh/products/sku/189347/intel-wifi-6-ax200-gig/downloads.html" target="_blank" class="download-btn">Intel AX200 无线网卡驱动</a>
+                <span class="desc">Intel AX200 无线网卡驱动</span>
+            </li>
+            <!-- 第28项 -->
+            <li class="link-item">
+                <a href="http://www.asrockchina.com.cn/MB/AMD/B550M%20Steel%20Legend/index.cn.asp#BIOS" target="_blank" class="download-btn">华擎B550M Steel Legend BIOS</a>
+                <span class="desc">华擎B550M Steel Legend BIOS下载</span>
+            </li>
+            <!-- 第29项 -->
+            <li class="link-item">
+                <a href="http://www.asrockchina.com.cn/MB/AMD/B550M%20Steel%20Legend/index.cn.asp#Download" target="_blank" class="download-btn">华擎B550M Steel Legend 驱动</a>
+                <span class="desc">华擎B550M Steel Legend 驱动下载</span>
+            </li>
+            <!-- 第30项 -->
+            <li class="link-item">
+                <a href="https://www.amd.com/zh-cn/support/downloads/drivers.html/chipsets/am4/b550.html" target="_blank" class="download-btn">AMD B550 芯片组驱动</a>
+                <span class="desc">AMD B550 芯片组驱动</span>
+            </li>
+            <!-- 第31项 -->
+            <li class="link-item">
+                <a href="https://cn.creative.com/support/downloads/download.asp?MainCategory=1&nRegionFK=&nCountryFK=&nLanguageFK=&sOSName=Windows+10+32-bit&region=2&Product_Name=Sound+Blaster+X-Fi+Surround+5.1+Pro&Product_ID=20055&modelnumber=&driverlang=2052&OS=51&drivertype=0" target="_blank" class="download-btn">创新Sound Blaster X-Fi 声卡驱动</a>
+                <span class="desc">创新Sound Blaster X-Fi 声卡驱动</span>
+            </li>
+            <!-- 第32项 -->
+            <li class="link-item">
+                <a href="https://www.canon.com.cn/supports/download/sims/list/slist?searchTab=&channel=1&categoryId=16&categoryNameC=%E5%96%B7%E5%A2%A8%E6%89%93%E5%8D%B0%E6%9C%BA&seriesId=82&seriesNameC=MG%E7%B3%BB%E5%88%97&modelId=1303&modelName=PIXMA%2520MG3080&fileTypeName=%25E9%25A9%25B1%25E5%258A%25A8%25E7%25A8%258B%25E5%25BA%258F&fileTypeId=&subName=Windows%252011&OSName=Windows%252010%2520%28x64%29&pageNo=&searchTips=" target="_blank" class="download-btn">佳能PIXMA MG3080 打印机驱动</a>
+                <span class="desc">佳能PIXMA MG3080 打印机驱动</span>
+            </li>
+            <!-- 第33项 -->
+            <li class="link-item">
+                <a href="https://rog-forum.asus.com/t5/downloads-for-motherboards/drivers-amd-mediatek-wifi-bluetooth/m-p/857576" target="_blank" class="download-btn">华硕ROG 联发科WiFi/蓝牙驱动</a>
+                <span class="desc">华硕ROG 联发科WiFi/蓝牙驱动</span>
+            </li>
+            <!-- 第34项 -->
+            <li class="link-item">
+                <a href="http://www.blackmagicdesign.com/cn/products/davinciresolve" target="_blank" class="download-btn">DaVinci Resolve 达芬奇</a>
+                <span class="desc">DaVinci Resolve 达芬奇剪辑软件</span>
+            </li>
+            <!-- 第35项 -->
+            <li class="link-item">
+                <a href="https://www.maxon.net/zh/downloads/cinema-4d-2026-downloads" target="_blank" class="download-btn">Cinema 4D 2026 官方</a>
+                <span class="desc">Cinema 4D 2026 官方下载</span>
+            </li>
+            <!-- 第36项 -->
+            <li class="link-item">
+                <a href="https://www.gfxcamp.com/c4d-2026/" target="_blank" class="download-btn">C4D 2026 资源1</a>
+                <span class="desc">C4D 2026 下载资源</span>
+            </li>
+            <!-- 第37项 -->
+            <li class="link-item">
+                <a href="https://www.up58.net/58743.html" target="_blank" class="download-btn">C4D 2026 资源2</a>
+                <span class="desc">C4D 2026 下载资源</span>
+            </li>
+            <!-- 第38项 -->
+            <li class="link-item">
+                <a href="https://www.google.com/chrome/dr/download/?brand=FKPE&ds_kid=43700075934933123&gad_source=1&gad_campaignid=19930262352&gbraid=0AAAAAoY3CA4VZFyoM1tJDa0qupXwprrID&gclid=Cj0KCQjwm93DBhD_ARIsADR_DjGAfZz1_olUXkTyywH3ZKZSlFAvLnPydcUyx9rsgeSjXp6XjVorYtoaAi2SEALw_wcB&gclsrc=aw.ds" target="_blank" class="download-btn">Google Chrome</a>
+                <span class="desc">Google Chrome 浏览器下载</span>
+            </li>
+            <!-- 第39项 -->
+            <li class="link-item">
+                <a href="https://www.win-rar.com/download.html?&L=0" target="_blank" class="download-btn">WinRAR 官方</a>
+                <span class="desc">WinRAR 压缩软件下载</span>
+            </li>
+            <!-- 第40项 -->
+            <li class="link-item">
+                <a href="https://www.aichunjing.com/soft/1050.html" target="_blank" class="download-btn">WinRAR AI纯净境</a>
+                <span class="desc">AI纯净境 软件资源 WinRAR</span>
+            </li>
+            <!-- 第41项 -->
+            <li class="link-item">
+                <a href="https://www.gw.com.cn/download.html" target="_blank" class="download-btn">大智慧</a>
+                <span class="desc">大智慧软件下载</span>
+            </li>
+            <!-- 第42项 -->
+            <li class="link-item">
+                <a href="https://download.10jqka.com.cn/free/ths/" target="_blank" class="download-btn">同花顺</a>
+                <span class="desc">同花顺炒股软件下载</span>
+            </li>
+            <!-- 第43项 -->
+            <li class="link-item">
+                <a href="https://pan.baidu.com/download#win" target="_blank" class="download-btn">百度网盘 Windows</a>
+                <span class="desc">百度网盘Windows客户端下载</span>
+            </li>
+            <!-- 第44项 -->
+            <li class="link-item">
+                <a href="https://www.blender.org/download/" target="_blank" class="download-btn">Blender</a>
+                <span class="desc">Blender 3D建模软件下载</span>
+            </li>
+            <!-- 第45项 -->
+            <li class="link-item">
+                <a href="https://effect.douyin.com/" target="_blank" class="download-btn">抖音特效开放平台</a>
+                <span class="desc">抖音特效开放平台</span>
+            </li>
+            <!-- 第46项 -->
+            <li class="link-item">
+                <a href="https://www.ieway.cn/" target="_blank" class="download-btn">IEMaster/EV录屏</a>
+                <span class="desc">IEMaster 相关工具 EV录屏</span>
+            </li>
+            <!-- 第47项 -->
+            <li class="link-item">
+                <a href="https://www.insta360.com/cn/download" target="_blank" class="download-btn">Insta360 全景相机软件</a>
+                <span class="desc">Insta360 全景相机软件下载</span>
+            </li>
+            <!-- 第48项 -->
+            <li class="link-item">
+                <a href="https://mkvtoolnix.download/downloads.html#windows" target="_blank" class="download-btn">MKVToolNix</a>
+                <span class="desc">MKVToolNix MKV编辑工具</span>
+            </li>
+            <!-- 第49项 -->
+            <li class="link-item">
+                <a href="https://www.doubao.com/chat/?channel=qqdh_kz&source=dbweb_qqdh_pc_kuz_01&keywordid=h1l3" target="_blank" class="download-btn">豆包AI</a>
+                <span class="desc">豆包AI 聊天工具</span>
+            </li>
+            <!-- 第50项 -->
+            <li class="link-item">
+                <a href="https://www.cnblogs.com/asionwu" target="_blank" class="download-btn">foobar2000</a>
+                <span class="desc">foobar2000 音频播放器</span>
+            </li>
+            <!-- 第51项 -->
+            <li class="link-item">
+                <a href="https://www.capcut.cn/" target="_blank" class="download-btn">剪映CapCut</a>
+                <span class="desc">剪映CapCut 视频剪辑软件</span>
+            </li>
+            <!-- 第52项 -->
+            <li class="link-item">
+                <a href="https://streamingtool.douyin.com/" target="_blank" class="download-btn">抖音直播工具</a>
+                <span class="desc">抖音直播工具</span>
+            </li>
+            <!-- 第53项 -->
+            <li class="link-item">
+                <a href="https://cheatengine.org/" target="_blank" class="download-btn">Cheat Engine</a>
+                <span class="desc">Cheat Engine 内存修改工具</span>
+            </li>
+            <!-- 第54项 -->
+            <li class="link-item">
+                <a href="https://github.com/lyswhut/lx-music-desktop#readme" target="_blank" class="download-btn">洛雪音乐桌面版</a>
+                <span class="desc">洛雪音乐桌面版</span>
+            </li>
+            <!-- 第55项 -->
+            <li class="link-item">
+                <a href="https://gravesoft.dev/office_c2r_custom" target="_blank" class="download-btn">Office 自定义安装工具</a>
+                <span class="desc">Office 自定义安装工具</span>
+            </li>
+            <!-- 第56项 -->
+            <li class="link-item">
+                <a href="https://www.cybermania.ws/appz/acrobat-pro-dc/" target="_blank" class="download-btn">Acrobat Pro DC 资源</a>
+                <span class="desc">Acrobat Pro DC 相关资源</span>
+            </li>
+            <!-- 第57项 -->
+            <li class="link-item">
+                <a href="https://vk.com/monkrus" target="_blank" class="download-btn">Monkrus Adobe资源</a>
+                <span class="desc">Monkrus 软件资源 Adobe</span>
+            </li>
+            <!-- 第58项 -->
+            <li class="link-item">
+                <a href="https://repack.me/" target="_blank" class="download-btn">Repack 软件封装资源</a>
+                <span class="desc">Repack 软件封装资源</span>
+            </li>
+            <!-- 第59项 -->
+            <li class="link-item">
+                <a href="https://codec.kyiv.ua/ad0be.html" target="_blank" class="download-btn">Adobe 插件资源</a>
+                <span class="desc">Adobe 插件资源 </span>
+            </li>
+            <!-- 第60项 -->
+            <li class="link-item">
+                <a href="https://www.wycad.com/3360.html" target="_blank" class="download-btn">红巨星插件套装</a>
+                <span class="desc">WYCAD 软件资源 红巨星插件套装</span>
+            </li>
+            <!-- 第61项 -->
+            <li class="link-item">
+                <a href="https://www.videocopilot.net/blog/2016/03/new-plug-in-saber-now-available-100-free/" target="_blank" class="download-btn">VideoCopilot Saber</a>
+                <span class="desc">VideoCopilot Saber 插件</span>
+            </li>
+            <!-- 第62项 -->
+            <li class="link-item">
+                <a href="https://www.videocopilot.net/blog/2018/05/fx-console-updated-to-v1-0-3/" target="_blank" class="download-btn">VideoCopilot FX Console</a>
+                <span class="desc">VideoCopilot FX Console 插件</span>
+            </li>
+            <!-- 第63项 -->
+            <li class="link-item">
+                <a href="https://effect.douyin.com/guides/5q3rzmql/b03z0vxg" target="_blank" class="download-btn">抖音特效教程</a>
+                <span class="desc">抖音特效教程</span>
+            </li>
+            <!-- 第64项 -->
+            <li class="link-item">
+                <a href="https://nikcollection.dxo.com/zh-cn/" target="_blank" class="download-btn">Nik Collection</a>
+                <span class="desc">Nik Collection 摄影滤镜</span>
+            </li>
+            <!-- 第65项 -->
+            <li class="link-item">
+                <a href="https://www.psdashi.com/" target="_blank" class="download-btn">PS大神 Nik Collection</a>
+                <span class="desc">PS大神 设计资源 Nik Collection</span>
+            </li>
+            <!-- 第66项 -->
+            <li class="link-item">
+                <a href="https://github.com/2dust/v2rayN" target="_blank" class="download-btn">v2rayN</a>
+                <span class="desc">v2rayN 代理客户端</span>
+            </li>
+            <!-- 第67项 -->
+            <li class="link-item">
+                <a href="https://handbrake.fr/" target="_blank" class="download-btn">HandBrake</a>
+                <span class="desc">HandBrake 视频转码工具</span>
+            </li>
+            <!-- 第68项 -->
+            <li class="link-item">
+                <a href="https://im.qq.com/pcqq/index.shtml" target="_blank" class="download-btn">QQ PC版</a>
+                <span class="desc">QQ PC版下载</span>
+            </li>
+            <!-- 第69项 -->
+            <li class="link-item">
+                <a href="https://pc.weixin.qq.com/" target="_blank" class="download-btn">微信PC版</a>
+                <span class="desc">微信PC版下载</span>
+            </li>
+            <!-- 第70项 -->
+            <li class="link-item">
+                <a href="https://pc.xunlei.com/" target="_blank" class="download-btn">迅雷PC版</a>
+                <span class="desc">迅雷PC版下载</span>
+            </li>
+            <!-- 第71项 -->
+            <li class="link-item">
+                <a href="https://video.xunlei.com/pc.html" target="_blank" class="download-btn">迅雷影音PC版</a>
+                <span class="desc">迅雷影音PC版下载</span>
+            </li>
+            <!-- 第72项 -->
+            <li class="link-item">
+                <a href="https://github.com/database64128/youtube-dl-wpf" target="_blank" class="download-btn">youtube-dl-wpf</a>
+                <span class="desc">youtube-dl-wpf 视频下载工具</span>
+            </li>
+            <!-- 第73项 -->
+            <li class="link-item">
+                <a href="https://github.com/yt-dlp/yt-dlp" target="_blank" class="download-btn">yt-dlp</a>
+                <span class="desc">yt-dlp 视频下载工具</span>
+            </li>
+            <!-- 第74项 -->
+            <li class="link-item">
+                <a href="https://github.com/ytdl-org/ytdl-nightly" target="_blank" class="download-btn">youtube-dl</a>
+                <span class="desc">youtube-dl 视频下载工具</span>
+            </li>
+            <!-- 第75项 -->
+            <li class="link-item">
+                <a href="https://geekuninstaller.com/download" target="_blank" class="download-btn">Geek Uninstaller</a>
+                <span class="desc">Geek Uninstaller 卸载工具</span>
+            </li>
+            <!-- 第76项 -->
+            <li class="link-item">
+                <a href="https://www.den4b.com/" target="_blank" class="download-btn">ReNamer</a>
+                <span class="desc">ReNamer 文件改名</span>
+            </li>
+            <!-- 第77项 -->
+            <li class="link-item">
+                <a href="https://github.com/drag0n-app/MyHash" target="_blank" class="download-btn">MyHash</a>
+                <span class="desc">MyHash 文件哈希计算工具</span>
+            </li>
+            <!-- 第79项 -->
+            <li class="link-item">
+                <a href="https://github.com/BluePointLilac/ContextMenuManager" target="_blank" class="download-btn">右键菜单管理工具</a>
+                <span class="desc">右键菜单管理工具</span>
+            </li>
+            <!-- 第80项 -->
+            <li class="link-item">
+                <a href="https://www.ccleaner.com/zh-cn/ccleaner" target="_blank" class="download-btn">CCleaner 官方</a>
+                <span class="desc">CCleaner 系统清理工具</span>
+            </li>
+            <!-- 第81项 -->
+            <li class="link-item">
+                <a href="https://www.gndown.com/15933.html" target="_blank" class="download-btn">CCleaner Pro v7.5.1255</a>
+                <span class="desc">GNDown 软件资源 CCleaner Pro v7.5.1255</span>
+            </li>
+            <!-- 第82项 -->
+            <li class="link-item">
+                <a href="https://spleetergui.com/Download" target="_blank" class="download-btn">SpleeterGUI</a>
+                <span class="desc">SpleeterGUI 音频分离工具</span>
+            </li>
+            <!-- 第83项 -->
+            <li class="link-item">
+                <a href="https://github.com/kingToolbox/WindTerm" target="_blank" class="download-btn">WindTerm</a>
+                <span class="desc">WindTerm 终端工具</span>
+            </li>
+            <!-- 第84项 -->
+            <li class="link-item">
+                <a href="https://motrix.app/download" target="_blank" class="download-btn">Motrix</a>
+                <span class="desc">Motrix 下载工具</span>
+            </li>
+            <!-- 第85项 -->
+            <li class="link-item">
+                <a href="https://www.videolan.org/" target="_blank" class="download-btn">VLC 播放器</a>
+                <span class="desc">VLC 播放器下载</span>
+            </li>
+            <!-- 第86项 -->
+            <li class="link-item">
+                <a href="https://www.alipan.com/" target="_blank" class="download-btn">阿里云盘</a>
+                <span class="desc">阿里云盘官网</span>
+            </li>
+        </ul>
+
+        <div class="download-footer">
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">FFmpeg本地安装路径 %APPDATA%\ffmpeg\bin</p>
+        </div>
+    </div>
+
+    <!-- ========== 全局功能组件 ========== -->
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop">↑</button>
+    <!-- 提示框 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ========== 收藏网址列表功能 ==========
+        // 网址数据：[URL, 网站名称]
+        const urlData = [
+            ["http://www.hao123.com/?tn=92637567_hao_pg", "好123主页"],
+            ["http://www.hao123.com/video", "好123视频"],
+            ["https://www.bilibili.com/", "哔哩哔哩"],
+            ["https://www.douyin.com/discover", "抖音"],
+            ["https://yiyan.baidu.com/", "文心一言"],
+            ["https://www.canva.com/", "Canva可画"],
+            ["https://beta.character.ai/", "Character AI"],
+            ["https://bard.google.com/", "Google Bard"],
+            ["https://www.coze.com/space/7352098627621634065/bot", "扣子AI"],
+            ["https://www.google.com/", "Google主页"],
+            ["https://translate.google.com/?sl=auto&tl=zh-CN&op=translate", "Google翻译"],
+            ["https://www.google.com/earth/studio/", "Google地球工作室"],
+            ["https://www.youtube.com/", "YouTube"],
+            ["https://dash.cloudflare.com/", "Cloudflare控制台"],
+            ["https://sketch.metademolab.com/canvas", "MetaDemo Sketch"],
+            ["https://civitai.com/models", "Civitai模型库"],
+            ["https://discord.com/channels/1123665496148017235/1134375457236725770", "Discord频道"],
+            ["https://sketchfab.com/search?q=helmet&type=models", "Sketchfab头盔模型"],
+            ["https://dygod.net/", "电影天堂"],
+            ["https://greasyfork.org/zh-CN", "油猴脚本库"],
+            ["https://www.microsoft.com/zh-cn/software-download", "微软下载中心"],
+            ["https://next.itellyou.cn/Original/Index#", "MSDN我告诉你"],
+            ["https://schneegans.de/windows/unattend-generator/", "Windows无人值守生成器"],
+            ["https://github.com/massgravel/Microsoft-Activation-Scripts", "微软激活脚本"],
+            ["https://vercel.com/kongwxs-projects", "vercel"],
+            ["https://replit.com/~", "Replit在线编程"],
+            ["https://stock.hostmonit.com/CloudFlareYesV6", "CloudFlare IP库"],
+            ["http://ip.flares.cloud/", "Cloudflare IP"],
+            ["https://openproxylist.com/v2ray/", "V2Ray代理列表"],
+            ["https://ip.skk.moe/", "SKK IP工具"],
+            ["https://www.itdog.cn/", "IT狗测速"],
+            ["http://www.htqyy.com/play/538", "好听音乐网"],
+            ["http://game.ali213.net/index.php", "游侠网"],
+            ["https://www.pinterest.com/", "Pinterest"],
+            ["https://www.instagram.com/", "Instagram"],
+            ["https://x.com/", "X"],
+            ["https://www.facebook.com/", "Facebook"],
+            ["https://www.icloud.com/", "iCloud"],
+            ["https://chrome.google.com/webstore/category/extensions?utm_campaign=en&utm_source=en-et-na-us-oc-webstrhm&utm_medium=et", "Chrome扩展商店"],
+            ["https://play.google.com/store/games", "Google Play游戏"],
+            ["https://apkcombo.com/zh/", "APKCombo下载"],
+            ["https://apps.evozi.com/apk-downloader/?id=ch.protonvpn.android", "APK下载器"],
+            ["https://www.jb51.net/", "脚本之家"],
+            ["https://vk.com/monkrus", "VK Monkrus"],
+            ["https://uztracker.net/viewtopic.php?t=55150", "UZTracker资源"],
+            ["https://codec.kyiv.ua/ad0be.html", "Adobe破解资源"],
+            ["https://www.cybermania.ws/", "Cybermania资源"],
+            ["https://www.0daydown.com/", "0daydown资源"],
+            ["https://cilishenqi.com/#term-5", "磁力神器"],
+            ["https://www.acwifi.net/", "ACWiFi测评"],
+            ["http://192.168.31.1/cgi-bin/luci/web", "路由器管理"],
+            ["http://192.168.31.1:9999/ui/#/overview", "内网监控"],
+            ["https://www.l53.net/", "L53资源网"],
+            ["https://my.dnshe.com/login.php", "免费域名"],
+            ["https://register.us.kg/panel/main", "US.KG域名面板"],
+            ["https://freedomain.one/Direct.sv?cmd=userDNSList", "免费域名DNS"],
+            ["https://dynv6.com/", "Dynv6动态DNS"],
+            ["https://www.uuidgenerator.net/version4", "UUID生成器"],
+            ["https://sub.cmliussss.com/", "订阅转换"],
+            ["https://clash2sfa.xmdhs.com/", "Clash转SFA"],
+            ["https://app.suno.ai/create/", "Suno AI音乐"],
+            ["https://ai.invideo.io/workspace/2ae8beec-ca25-47cf-9b40-edcaefe8fb96/home", "InVideo AI"],
+            ["https://music.youtube.com/", "YouTube音乐"],
+            ["https://www.clipto.com/zh-TW/media-downloader/youtube-downloader?via=ytb", "yt视频下载4k"],
+            ["https://v1.yt1s.biz/youtube-to-mp4/", "yt视频下载1080p"],
+            ["https://extract.pics/", "图片提取"],
+            ["https://ideogram.ai/t/explore", "Ideogram AI"],
+            ["https://www.shakker.ai/?sourceId=000472", "Shakker AI"],
+            ["https://storyteller.mootion.com/project/p-eK3965Jun6VUoS7z5ai#BGMList", "Mootion故事生成"],
+            ["https://mf.dp.wpurl.cc/user/parse", "解析工具"],
+            ["https://uom.caac.gov.cn/#/main", "民航UOM系统"],
+            ["https://pan.quark.cn/list#/list/all", "夸克网盘"],
+            ["https://run.claw.cloud/", "Claw Cloud运行"]
+        ];
+
+        // 获取元素
+        const backToTopBtn = document.getElementById('backToTop');
+        const urlBtnGrid = document.getElementById('urlBtnGrid');
+        const toast = document.getElementById('toast');
+
+        // 初始化：生成所有网址按钮
+        function initUrlButtons() {
+            urlData.forEach(([url, name]) => {
+                const btn = document.createElement('button');
+                btn.className = 'url-btn';
+                btn.textContent = name;
+                btn.title = url; // 鼠标悬停显示完整URL
+                // 点击按钮打开网址（新标签页）
+                btn.addEventListener('click', () => {
+                    window.open(url, '_blank');
+                });
+                urlBtnGrid.appendChild(btn);
+            });
+        }
+
+        // 返回顶部功能
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 提示框显示函数
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            if (type === 'error') {
+                toast.style.backgroundColor = '#dc3545';
+            } else {
+                toast.style.backgroundColor = '#28a745';
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // 页面加载完成后初始化按钮
+        window.addEventListener('DOMContentLoaded', initUrlButtons);
+    </script>
+</body>
+</html>
